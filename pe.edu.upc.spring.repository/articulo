@@ -1,0 +1,19 @@
+package pe.edu.upc.spring.repository;
+
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import pe.edu.upc.spring.model.Articulo;
+
+@Repository
+public interface IArticuloDao extends JpaRepository<Articulo, Integer>{
+	@Query("from Articulo a where a.nameArticulo like %:nameArticulo%")
+	List<Articulo> buscarNombre(@Param("nameArticulo") String nameArticulo);
+	@Query("from Articulo a where a.juegos.nameJuego like %:nameJuego%")
+	List<Articulo> buscarJuego(@Param("nameJuego") String nameJuego);
+}

@@ -1,0 +1,64 @@
+package pe.edu.upc.spring.serviceimpl;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import pe.edu.upc.spring.repository.IJuegosDao;
+import pe.edu.upc.spring.model.Juegos;
+import pe.edu.upc.spring.service.IJuegosService;
+
+
+@Service
+public class JuegosServiceImpl implements IJuegosService{
+
+	@Autowired
+	private IJuegosDao mD;
+
+	@Override
+	@Transactional
+	public boolean insertar(Juegos juegos) {
+		Juegos objJue = mD.save(juegos);
+		if (objJue == null)
+			return false;
+		else
+			return true;		
+	}
+
+	@Override
+	public List<Juegos> listar() {
+		return mD.findAll();
+	}
+
+	@Override
+	public void eliminar(int idJuegos) {
+		mD.deleteById(idJuegos);		
+	}
+	
+	@Override
+	public List<Juegos> buscarNombreJuegos (String nameJuegos) {
+	 return  mD.buscarNombreJuegos(nameJuegos);
+	}
+	
+	@Override
+	public boolean update(Juegos juegos) {
+		boolean flag = false;
+		try {
+			mD.save(juegos);
+			flag = true;
+		}
+		catch(Exception ex) {
+			System.out.println("Ocurrio un error");
+		}
+		return flag;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Optional<Juegos> listarId(int idJuegos) {
+		return  mD.findById(idJuegos);
+	}
+}

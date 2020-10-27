@@ -1,0 +1,64 @@
+package pe.edu.upc.spring.serviceimpl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import pe.edu.upc.spring.repository.ICustomerDao;
+import pe.edu.upc.spring.model.Customer;
+import pe.edu.upc.spring.service.ICustomerService;
+
+@Service
+public class CustomerServiceImpl implements ICustomerService {
+	@Autowired
+	private ICustomerDao cD;
+
+	@Override
+	@Transactional
+	public boolean insert(Customer customer) {
+		Customer objCust = cD.save(customer);
+		if (objCust == null)
+			return false;
+		else
+			return true;
+	}
+
+	@Transactional
+	@Override
+	public boolean update(Customer customer) {
+		boolean flag = false;
+		try {
+			cD.save(customer);
+			flag = true;
+		}
+		catch(Exception ex) {
+			System.out.println("Ocurrio un error");
+		}
+		return flag;
+	}
+
+	@Override
+	public void delete(int idcustomer) {
+		cD.deleteById(idcustomer);
+	}
+
+	@Override
+	public List<Customer> listar() {
+		return cD.findAll();
+	}
+	@Override
+	public List<Customer> buscarNombreCustomer (String nameCustomer) {
+		return cD.buscarNombreCustomer(nameCustomer);
+	}
+
+	@Override
+	public List<Customer> buscarIdCustomer (int idCustomer) {
+		return cD.buscarIdCustomer(idCustomer);
+	}
+	@Override
+	public List<Customer> buscarDniCustomer (String dniCustomer) {
+		return cD.buscarDniCustomer(dniCustomer);
+	}
+}

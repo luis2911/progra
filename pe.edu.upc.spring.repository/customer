@@ -1,0 +1,23 @@
+package pe.edu.upc.spring.repository;
+
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import pe.edu.upc.spring.model.Customer;
+
+public interface ICustomerDao extends JpaRepository<Customer, Integer>{
+	@Query("from Customer cu where cu.nameCustomer like %:nameCustomer%")
+	List<Customer> buscarNombreCustomer(@Param("nameCustomer") String nameCustomer);
+	
+	@Query("from Customer cu where cu.idCustomer like %:idCustomer%")
+	List<Customer> buscarIdCustomer(@Param("idCustomer") int idCustomer);
+	
+	@Query("from Customer cu where cu.dniCustomer like %:dniCustomer%")
+	List<Customer> buscarDniCustomer(@Param("dniCustomer") String dniCustomer);
+
+} 
+

@@ -1,0 +1,49 @@
+package pe.edu.upc.spring.controller;
+
+import java.text.ParseException;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import pe.edu.upc.spring.model.User;
+import pe.edu.upc.spring.service.ICustomerService;
+
+@Controller
+@RequestMapping("/Register")
+public class RegisterController  {
+	@Autowired
+	private ICustomerService cS;
+
+	@RequestMapping("/bienvenido")
+	public String irRegisterBienvenido() {
+		return "bienvenido";
+	}
+	@RequestMapping("/irRegistrar")
+	public String irRegistrar(Model model) {
+		model.addAttribute("user", new User());
+		return "user";
+	}
+	@RequestMapping("/registrar")
+	public String registrar(@ModelAttribute @Valid User objUser, BindingResult binRes, Model model) 
+	throws ParseException
+	{
+		if (binRes.hasErrors()) {
+			return "user";
+		}
+		else {
+			boolean flag = cS.insert(objUser);
+			if (flag) {
+				return "redirect:/user/listar";
+			}
+			else {
+				model.addAttribute("mensaje", "Ocurrio un error");
+				return "redirect:/user/irRegistrar";
+			}
+		}
+	}
+}

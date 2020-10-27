@@ -1,0 +1,63 @@
+package pe.edu.upc.spring.model;
+
+import java.io.Serializable;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="categoria")
+public class Categoria implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int idCategoria;
+	
+	@Column(name="nombreCategoria", nullable=false, length=30)
+	private String nombreCategoria;
+	
+	private Date fechaCategoria;
+
+	public Categoria() {
+		super();
+	}
+
+	public Categoria(int idCategoria, String nombreCategoria, Date fechaCategoria) {
+		super();
+		this.idCategoria = idCategoria;
+		this.nombreCategoria = nombreCategoria;
+		this.fechaCategoria = fechaCategoria;
+	}
+
+	public int getIdCategoria() {
+		return idCategoria;
+	}
+
+	public void setIdCategoria(int idCategoria) {
+		this.idCategoria = idCategoria;
+	}
+
+	public String getNombreCategoria() {
+		return nombreCategoria;
+	}
+
+	public void setNombreCategoria(String nombreCategoria) {
+		this.nombreCategoria = nombreCategoria;
+	}
+
+	public Date getFechaCategoria() {
+		return fechaCategoria;
+	}
+
+	public void setFechaCategoria(Date fechaCategoria) {
+		this.fechaCategoria = fechaCategoria;
+	}
+
+}

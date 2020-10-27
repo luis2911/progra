@@ -1,0 +1,64 @@
+package pe.edu.upc.spring.model;
+
+import java.io.Serializable;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="juegos")
+public class Juegos implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int idJuegos;
+	
+	@Column(name="nombreJuegos", nullable=false, length=30)
+	private String nombreJuegos;
+	
+	private Date fechaJuegos;
+
+	public Juegos() {
+		super();
+	}
+
+	public Juegos(int idJuegos, String nombreJuegos, Date fechaJuegos) {
+		super();
+		this.idJuegos = idJuegos;
+		this.nombreJuegos = nombreJuegos;
+		this.fechaJuegos = fechaJuegos;
+	}
+
+	public int getIdJuegos() {
+		return idJuegos;
+	}
+
+	public void setIdJuegos(int idJuegos) {
+		this.idJuegos = idJuegos;
+	}
+
+	public String getNombreJuegos() {
+		return nombreJuegos;
+	}
+
+	public void setNombreJuegos(String nombreJuegos) {
+		this.nombreJuegos = nombreJuegos;
+	}
+
+	public Date getFechaJuegos() {
+		return fechaJuegos;
+	}
+
+	public void setFechaJuegos(Date fechaJuegos) {
+		this.fechaJuegos = fechaJuegos;
+	}
+
+	
+}

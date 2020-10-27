@@ -1,0 +1,16 @@
+package pe.edu.upc.spring.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import pe.edu.upc.spring.model.Articulo;
+
+public interface IArticuloService {
+	public boolean insertar(Articulo articulo);
+	public List<Articulo> listar();
+	public void eliminar(int idArticulo);
+	boolean modificar(Articulo articulo);
+	List<Articulo> buscarNombre(String nameArticulo);
+	List<Articulo> buscarJuego(String nameJuego);
+	public Optional<Articulo> listarId(int idArticulo);
+}

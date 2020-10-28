@@ -1,0 +1,74 @@
+package pe.edu.upc.spring.serviceimpl;
+
+
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import pe.edu.upc.spring.repository.IRolDao;
+import pe.edu.upc.spring.model.Rol;
+import pe.edu.upc.spring.model.UserRol;
+import pe.edu.upc.spring.service.IRolService;
+
+@Service
+public class RolServiceImpl implements IRolService {
+
+
+	@Autowired
+	private IRolDao rD;
+
+	@Transactional
+	@Override
+	public boolean insert(Rol rol) {
+		Rol objRol = rD.save(rol);
+		if (objRol == null)
+			return false;
+		else
+			return true;
+	}
+
+	@Transactional
+	@Override
+	public boolean update(Rol rol)  {
+		boolean flag = false;
+		try {
+			rD.save(rol);
+			flag = true;
+		}
+		catch(Exception ex) {
+			System.out.println("Ocurrio un error");
+		}
+		return flag;
+	}
+
+
+	@Override
+	public void delete(int idrol) {
+		rD.deleteById(idrol);;
+	}
+
+	@Override
+	public List<Rol> listar() {
+		return rD.findAll();
+	}
+
+	@Override
+	public List<Rol> buscarIdRol (int idRol) {
+		 return  rD.buscarIdRol(idRol);
+		}
+
+	@Override
+	@Transactional
+	public void insertUserRoles(UserRol userRoles) {
+		
+	}
+
+	@Override
+	public List<UserRol> buscarRol(String user) {
+		return rD.buscarRol(user);
+	}
+
+}

@@ -1,0 +1,66 @@
+package pe.edu.upc.spring.serviceimpl;
+
+
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import pe.edu.upc.spring.repository.IUserDao;
+import pe.edu.upc.spring.model.User;
+import pe.edu.upc.spring.service.IUserService;
+
+
+@Service
+public class UserServiceImpl implements IUserService{
+	@Autowired
+	private IUserDao uD;
+
+	@Transactional
+	@Override
+	public boolean insert(User user)  {
+		User objUser = uD.save(user);
+		if (objUser == null)
+			return false;
+		else
+			return true;
+	}
+
+	@Transactional
+	@Override
+	public boolean update(User user){
+		boolean flag = false;
+		try {
+			uD.save(user);
+			flag = true;
+		}
+		catch(Exception ex) {
+			System.out.println("Ocurrio un error");
+	}
+		return flag;
+	}
+
+	@Transactional
+	@Override
+	public void delete(int iduser) {
+		 uD.deleteById(iduser);;
+	}
+
+	@Override
+	public List<User> listar() {
+		return uD.findAll();
+	}
+
+	@Override
+	public List<User> buscarIdUser(int idUser) {
+		return uD.buscarIdUser(idUser);
+	}
+
+	@Override
+	public  List<User> buscarUsername(String userName) {
+		return uD.buscarUsername(userName);
+	}
+
+}

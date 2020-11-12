@@ -1,0 +1,27 @@
+package pe.edu.upc.spring.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import pe.edu.upc.spring.model.Juegos;
+
+public interface IJuegosRepository extends JpaRepository<Juegos, Integer>{
+	
+	@Query("from Juegos j where j.nombreJuegos like :nombreJuegos%")
+	List<Juegos> buscarNombreJuegos(@Param("nombreJuegos") String nombreJuegos);
+	
+	@Query("from Juegos j where j.categoria.nombreCategoria like %:nombreCategoria%")
+	List<Juegos> buscarCategoria(@Param("nombreCategoria") String nombreCategoria);
+}
+
+/*
+
+public void insertar(Juegos juegos);
+	public List<Juegos> listar();
+	public void eliminar(int idJuegos);
+	public List<Juegos> findByNameJuegos(Juegos juegos);
+	public void update (Juegos juegos);
+*/

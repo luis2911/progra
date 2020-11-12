@@ -1,0 +1,18 @@
+package pe.edu.upc.spring.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import pe.edu.upc.spring.model.Venta;
+
+public interface IVentaService {
+	public boolean insertar(Venta venta);
+	public List<Venta> listar();
+	public void eliminar(int idVenta);
+	public boolean update (Venta venta);
+	public Optional<Venta> listarId(int idVenta);
+	List<Venta> buscarId(int idVenta);
+	List<Venta> buscarUser(String username);
+	
+	
+}

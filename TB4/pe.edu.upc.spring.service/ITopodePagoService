@@ -1,0 +1,18 @@
+package pe.edu.upc.spring.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import pe.edu.upc.spring.model.TipodePago;
+
+
+public interface ITipodePagoService {
+	public boolean insertar(TipodePago tipopago);
+	public List<TipodePago> listar();
+	public void eliminar(int idTPago);
+	public boolean update (TipodePago tipopago);
+	public Optional<TipodePago> listarId(int idTPago);
+	List<TipodePago> buscarIdTPago(String descripcionTipopago);
+	
+	
+}

@@ -1,0 +1,153 @@
+package pe.edu.upc.spring.controller;
+
+import java.text.ParseException;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+
+import pe.edu.upc.spring.model.TipodePago;
+
+import pe.edu.upc.spring.service.ITipodePagoService;
+
+
+@Controller
+@RequestMapping("/tipopago")
+public class TipodePagoController {
+
+	
+	@Autowired
+	private ITipodePagoService tpService;
+	
+	@RequestMapping("/")
+	public String irTipoPago(Map<String, Object> model) {
+		model.put("listaTPagos", tpService.listar());
+		return "listTPago";
+	}
+	
+	@RequestMapping("/irRegistrar")
+	public String irRegistrar(Model model) {
+		model.addAttribute("tipopago", new TipodePago());
+		return "tipopago";
+	}
+		
+	@RequestMapping("/registrar")
+	public String registrar(@ModelAttribute @Valid TipodePago objTPago, BindingResult binRes, Model model) 
+	throws ParseException
+	{
+		if (binRes.hasErrors()) {
+			return "tipopago";
+		}
+		else {
+			boolean flag = tpService.insertar(objTPago);
+			if (flag) {
+				return "redirect:/tipopago/listar";
+			}
+			else {
+				model.addAttribute("mensaje", "Ocurrio un error");
+				return "redirect:/tipopago/irRegistrar";
+			}
+		}
+	}
+	
+	@RequestMapping("/modificar/{id}")
+	public String modificar(@PathVariable int id, Model model, RedirectAttributes objRedir) 
+	throws ParseException
+	{
+		Optional<TipodePago> objTPago = tpService.listarId(id);
+		
+		if (objTPago == null) {
+			objRedir.addFlashAttribute("mensaje", "Ocurrio un error");
+			return "redirect:/tipopago/listar";
+		}
+		else {
+			model.addAttribute("tipopago", objTPago);
+			return "tipopago";
+		}
+	}
+	
+	@RequestMapping("/eliminar")
+	public String eliminar(Map<String, Object> model, @RequestParam(value="id") Integer id) 
+	{
+		try {
+			if (id!=null && id > 0) {
+				tpService.eliminar(id);
+				model.put("listaTPagos", tpService.listar());
+			}
+		}
+		catch(Exception ex) {
+			System.out.println(ex.getMessage());
+			model.put("mensaje", "sucedio un error");
+			model.put("listaPagos", tpService.listar());
+		}
+		return "listTPago";
+	}
+	
+	@RequestMapping("/listar")
+	public String listar(Map<String, Object> model) {
+		model.put("listaTPagos", tpService.listar());
+		return "listTPago";
+	}
+	
+	@RequestMapping("/listarId")
+	public String listar(Map<String, Object> model, @ModelAttribute TipodePago tipopago) 
+	throws ParseException
+	{
+		tpService.listarId(tipopago.getIdTPago());
+		return "listTPago";
+	}	
+	
+	@RequestMapping("/buscar")
+	public String buscar(Map<String, Object> model, @ModelAttribute TipodePago tipopago ) throws ParseException {
+		List<TipodePago> listaTPagos;
+		tipopago.setDescripcionTipopago(tipopago.getDescripcionTipopago());
+		listaTPagos = tpService.buscarIdTPago(tipopago.getDescripcionTipopago());
+		
+		if (listaTPagos.isEmpty()) {
+			model.put("mensaje", "No se encontro");
+		}
+		model.put("listaTPagos", listaTPagos);				
+		return "buscar";
+	}
+	
+	@PostMapping("/buscar")
+	public String buscar2(
+			@RequestParam(value = "txtnamesearch") String txtnamesearch,
+			Model model) {
+		List<TipodePago> listaTPagos;
+		if (StringUtils.isEmpty(txtnamesearch)) {
+			listaTPagos = tpService.listar();
+		} else {
+			listaTPagos = tpService.buscarIdTPago(txtnamesearch);
+		}
+		
+		if (listaTPagos.isEmpty()) {
+			model.addAttribute("mensaje", "No se encontraron resultados");
+		}
+		model.addAttribute("listaTPagos", listaTPagos);				
+		return "listTPago";
+	}
+	
+	
+	
+	@RequestMapping("/irBuscar")
+	public String irBuscar(Model model) {
+		model.addAttribute("tipopago", new TipodePago());
+		return "buscar";
+	}
+	
+
+}

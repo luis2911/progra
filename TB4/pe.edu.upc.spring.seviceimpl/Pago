@@ -1,0 +1,76 @@
+package pe.edu.upc.spring.serviceimpl;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import pe.edu.upc.spring.repository.IJuegosRepository;
+import pe.edu.upc.spring.repository.IPagoRepository;
+import pe.edu.upc.spring.service.IPagoService;
+import pe.edu.upc.spring.model.Pago;
+import pe.edu.upc.spring.model.Juegos;
+
+@Service
+public class PagoServiceImpl implements IPagoService {
+
+	@Autowired
+	private IPagoRepository pD;
+
+	@Autowired
+	private IJuegosRepository mD;
+
+	@Override
+	@Transactional
+	public Integer insertar(Pago pago) {
+		int rpta = 1;
+		if (rpta == 1) {
+			pD.save(pago);
+			
+			Optional<Pago> lista = pD.findById(pago.getIdPago());
+			Optional<Juegos> listajuegos = mD.findById(pago.getJuegos().getIdJuegos());
+			Pago obj = new Pago();
+			Juegos obj2 = new Juegos();
+			obj = lista.get();
+			obj2 = listajuegos.get();
+			obj2.setStock(obj2.getStock()-obj.getCantidad());
+			obj.setPreciototal(obj.getCantidad()*obj2.getPrecio());
+		}
+		return rpta;		
+	}
+
+	@Override
+	public List<Pago> listar() {
+		return pD.findAll();
+	}
+
+	@Override
+	public void eliminar(int idPago) {
+		pD.deleteById(idPago);
+	}
+
+	public List<Pago> buscarIdPago(String TitularTarjeta) {
+		return pD.buscarIdPago(TitularTarjeta);
+	}
+
+	@Override
+	public boolean update(Pago pago) {
+		boolean flag = false;
+		try {
+			pD.save(pago);
+			flag = true;
+		} catch (Exception ex) {
+			System.out.println("Ocurrio un error");
+		}
+		return flag;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Optional<Pago> listarId(int idPago) {
+		return pD.findById(idPago);
+	}
+
+}

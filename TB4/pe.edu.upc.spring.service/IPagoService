@@ -1,0 +1,17 @@
+package pe.edu.upc.spring.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import pe.edu.upc.spring.model.Pago;
+
+
+public interface IPagoService {
+	public Integer insertar(Pago pago);
+	public List<Pago> listar();
+	public void eliminar(int idPago);
+	public boolean update (Pago pago);
+	public Optional<Pago> listarId(int idPago);
+	List<Pago> buscarIdPago(String TitularTarjeta);
+	
+}

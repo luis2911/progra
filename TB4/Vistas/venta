@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		
+		<meta charset="ISO-8859-1"></meta>
+		
+		<title>Venta</title>
+		
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+		
+		<link 	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"
+				rel="stylesheet" id="bootstrap-css">
+		</link>
+
+		<script
+			src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js">
+		</script>
+		
+		<script type="text/javascript" th:src="@{/js/venta.js}"></script>
+
+	</head>
+	
+	<body>
+	
+		<div th:replace="fragments/header :: header"></div>
+		
+		<div class="container">
+			<form th:action="@{/venta/registrar}" method="post" th:object="${venta}">
+				<div class="form-group">
+					
+					<label for="idpago">ID:</label> 
+					<input type="text" class="form-control" th:field="*{id}"></input>
+					
+					<div class="form-group">
+						
+						<label for="fechaventa">FECHA DE VENCIMIENTO:</label> <input
+                        type="date" th:field="*{fechaVenta}" class="form-control"
+                        id="fechaventa"></input>
+                        <!-- th:errors Se encarga del manejo de errores -->
+                    <div class="alert alert-danger"
+                        th:if="${#fields.hasErrors('fechaVenta')}"
+                        th:errors="*{fechaVenta}"></div>
+						
+						<label 	for="nombre">MONTO:</label> 
+						<input type="text" th:field="*{Monto}" class="form-control" id="nombre"></input>
+	
+						<div class="alert alert-danger" th:if="${#fields.hasErrors('Monto')}" 
+							th:errors="*{Monto}">
+						</div>
+						
+						
+						<label for="user" class=" col-sm-2 col-form-label">ID USUARIO: </label>
+					<select
+						class="form-control" th:field="*{user.idUser}">
+						<option th:each="u: ${listaUser}" th:value="${u.idUser}"
+							th:text="${u.username}"
+							th:selected="(${u.idUser} == *{user.idUser})"></option>
+					</select>
+					
+					<label for="pago" class=" col-sm-2 col-form-label">PAGO: </label>
+                    <select
+                        class="form-control" th:field="*{pago.idPago}">
+                        <option th:each="p: ${listaPagos}" th:value="${p.idPago}"
+                            th:text="${p.idPago}"
+                            th:selected="(${p.idPago} == *{pago.idPago})"></option>
+                    </select>
+						
+					</div>
+					
+				</div>
+				
+				<button type="submit" class="btn btn-primary">Aceptar</button>
+				<a href="/juegos/listar" class="btn btn-danger">Cancelar</a>
+			</form>
+		</div>
+	
+		<div th:replace="fragments/footer :: footer"></div>
+
+	</body>
+	
+</html>

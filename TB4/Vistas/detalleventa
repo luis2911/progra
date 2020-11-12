@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		
+		<meta charset="ISO-8859-1"></meta>
+		
+		<title>Detalle de Venta</title>
+		
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+		
+		<link 	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"
+				rel="stylesheet" id="bootstrap-css">
+		</link>
+
+		<script
+			src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js">
+		</script>
+		
+		<script type="text/javascript" th:src="@{/js/detalleventa.js}"></script>
+
+	</head>
+	
+	<body>
+	
+		<div th:replace="fragments/header :: header"></div>
+		
+		<div class="container">
+			<form th:action="@{/detalleventa/registrar}" method="post" th:object="${detalleventa}">
+				<div class="form-group">
+					
+					<label for="iddetalleventa">ID:</label> 
+					<input type="text" class="form-control" th:field="*{idDetalleVenta}"></input>
+					
+					<div class="form-group">
+					
+						<label 	for="cantidad">CANTIDAD:</label> 
+						<input type="text" th:field="*{Cantidad}" class="form-control" id="cantidad"></input>
+	
+						<div class="alert alert-danger" th:if="${#fields.hasErrors('Cantidad')}" 
+							th:errors="*{Cantidad}">
+						</div>			
+						
+						<label 	for="precio">PRECIO:</label> 
+						<input type="text" th:field="*{Precio}" class="form-control" id="precio"></input>
+	
+						<div class="alert alert-danger" th:if="${#fields.hasErrors('Precio')}" 
+							th:errors="*{Precio}">
+						</div>
+						
+						<label for="venta" class=" col-sm-2 col-form-label">ID VENTA: </label>
+                    <select
+                        class="form-control" th:field="*{venta.id}">
+                        <option th:each="ve: ${listaVentas}" th:value="${ve.id}"
+                            th:text="${ve.id}"
+                            th:selected="(${ve.id} == *{venta.id})"></option>
+                    </select>
+						
+						<label for="juegos" class=" col-sm-2 col-form-label">JUEGO: </label>
+                    <select
+                        class="form-control" th:field="*{juegos.idJuegos}">
+                        <option th:each="ju: ${listaJuegos}" th:value="${ju.idJuegos}"
+                            th:text="${ju.nombreJuegos}"
+                            th:selected="(${ju.idJuegos} == *{juegos.idJuegos})"></option>
+                    </select>
+						
+					</div>
+					
+				</div>
+				
+				<button type="submit" class="btn btn-primary">Aceptar</button>
+				<a href="/detalleventa/listar" class="btn btn-danger">Cancelar</a>
+			</form>
+		</div>
+	
+		<div th:replace="fragments/footer :: footer"></div>
+
+	</body>
+	
+</html>

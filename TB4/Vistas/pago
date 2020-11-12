@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		
+		<meta charset="ISO-8859-1"></meta>
+		
+		<title>Pago</title>
+		
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+		
+		<link 	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"
+				rel="stylesheet" id="bootstrap-css">
+		</link>
+
+		<script
+			src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js">
+		</script>
+		
+		<script type="text/javascript" th:src="@{/js/pago.js}"></script>
+
+	</head>
+	
+	<body>
+	
+		<div th:replace="fragments/header :: header"></div>
+		
+		<div class="container">
+			<form th:action="@{/pago/registrar}" method="post" th:object="${pago}">
+				<div class="form-group">
+					
+					<label for="idpago">ID:</label> 
+					<input type="text" class="form-control" th:field="*{idPago}"></input>
+					
+					<div class="form-group">
+					
+						<label for="juegos" class=" col-sm-2 col-form-label">JUEGO: </label>
+                    <select
+                        class="form-control" th:field="*{juegos.idJuegos}">
+                        <option th:each="ju: ${listaJuegos}" th:value="${ju.idJuegos}"
+                            th:text="${ju.nombreJuegos}"
+                            th:selected="(${ju.idJuegos} == *{juegos.idJuegos})"></option>
+                    </select>
+						
+						
+						
+						<label for="fechavencimiento">FECHA DE VENCIMIENTO:</label> <input
+                        type="date" th:field="*{fechaVencimientoPago}" class="form-control"
+                        id="fechavencimiento"></input>
+                        <!-- th:errors Se encarga del manejo de errores -->
+                    <div class="alert alert-danger"
+                        th:if="${#fields.hasErrors('fechaVencimientoPago')}"
+                        th:errors="*{fechaVencimientoPago}"></div>
+						
+						<label 	for="titulartarjeta">TITULAR:</label> 
+						<input type="text" th:field="*{TitularTarjeta}" class="form-control" id="titulartarjeta"></input>
+	
+						<div class="alert alert-danger" th:if="${#fields.hasErrors('TitularTarjeta')}" 
+							th:errors="*{TitularTarjeta}">
+						</div>
+						
+						<label 	for="numerotarjeta">N TARJETA:</label> 
+						<input type="text" th:field="*{NumeroTarjeta}" class="form-control" id="numerotarjeta"></input>
+	
+						<div class="alert alert-danger" th:if="${#fields.hasErrors('NumeroTarjeta')}" 
+							th:errors="*{NumeroTarjeta}">
+						</div>
+						
+						<label 	for="cvv">CVV:</label> 
+						<input type="text" th:field="*{CVV}" class="form-control" id="cvv"></input>
+	
+						<div class="alert alert-danger" th:if="${#fields.hasErrors('CVV')}" 
+							th:errors="*{CVV}">
+						</div>
+						
+						<label for="tipodepago" class=" col-sm-2 col-form-label">TIPO DE PAGO: </label>
+					<select
+						class="form-control" th:field="*{tipodepago.idTPago}">
+						<option th:each="tp: ${listaTPagos}" th:value="${tp.idTPago}"
+							th:text="${tp.descripcionTipopago}"
+							th:selected="(${tp.idTPago} == *{tipodepago.idTPago})"></option>
+					</select>
+					
+					<label 	for="cantidad">CANTIDAD:</label> 
+						<input type="text" th:field="*{cantidad}" class="form-control" id="cantidad"></input>
+						
+						<div class="alert alert-danger" th:if="${#fields.hasErrors('cantidad')}" 
+							th:errors="*{cantidad}">
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				
+				<button type="submit" class="btn btn-primary">Aceptar</button>
+				<a href="/pago/listar" class="btn btn-danger">Cancelar</a>
+			</form>
+		</div>
+	
+		<div th:replace="fragments/footer :: footer"></div>
+
+	</body>
+	
+</html>

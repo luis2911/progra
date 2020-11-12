@@ -1,0 +1,68 @@
+package pe.edu.upc.spring.serviceimpl;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import pe.edu.upc.spring.repository.IVentaRepository;
+import pe.edu.upc.spring.service.IVentaService;
+import pe.edu.upc.spring.model.Venta;
+
+
+@Service
+public class VentaServiceImpl implements IVentaService{
+
+	@Autowired
+	private IVentaRepository vD;
+
+	@Override
+	@Transactional
+	public boolean insertar(Venta venta) {
+		Venta objVenta = vD.save(venta);
+		if (objVenta == null)
+			return false;
+		else
+			return true;		
+	}
+
+	@Override
+	public List<Venta> listar() {
+		return vD.findAll();
+	}
+
+	@Override
+	public void eliminar(int idVenta) {
+		vD.deleteById(idVenta);		
+	}
+	public List<Venta> buscarId(int idVenta){
+		return vD.buscarId(idVenta);
+	}
+	
+	@Override
+	public List<Venta> buscarUser(String username) {
+	 return  vD.buscarUser(username);
+	}
+	
+	@Override
+	public boolean update(Venta venta) {
+		boolean flag = false;
+		try {
+			vD.save(venta);
+			flag = true;
+		}
+		catch(Exception ex) {
+			System.out.println("Ocurrio un error");
+		}
+		return flag;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Optional<Venta> listarId(int idVenta) {
+		return  vD.findById(idVenta);
+	}
+
+}

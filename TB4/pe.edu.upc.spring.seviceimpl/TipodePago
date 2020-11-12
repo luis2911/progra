@@ -1,0 +1,67 @@
+package pe.edu.upc.spring.serviceimpl;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import pe.edu.upc.spring.repository.ITipodePagoRepository;
+
+import pe.edu.upc.spring.service.ITipodePagoService;
+
+import pe.edu.upc.spring.model.TipodePago;
+
+
+
+@Service
+public class TipodePagoServiceImpl implements ITipodePagoService{
+
+	@Autowired
+	private ITipodePagoRepository tpD;
+
+	@Override
+	@Transactional
+	public boolean insertar(TipodePago tipopago) {
+		TipodePago objTipo = tpD.save(tipopago);
+		if (objTipo == null)
+			return false;
+		else
+			return true;		
+	}
+
+	@Override
+	public List<TipodePago> listar() {
+		return tpD.findAll();
+	}
+
+	@Override
+	public void eliminar(int idTPago) {
+		tpD.deleteById(idTPago);		
+	}
+	public List<TipodePago> buscarIdTPago(String descripcionTipopago){
+		return tpD.buscarIdTPago(descripcionTipopago);
+	}
+	
+	
+	@Override
+	public boolean update(TipodePago tipopago) {
+		boolean flag = false;
+		try {
+			tpD.save(tipopago);
+			flag = true;
+		}
+		catch(Exception ex) {
+			System.out.println("Ocurrio un error");
+		}
+		return flag;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Optional<TipodePago> listarId(int idTPago) {
+		return  tpD.findById(idTPago);
+	}
+
+}

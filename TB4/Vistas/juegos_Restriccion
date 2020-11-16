@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		
+		<meta charset="ISO-8859-1"></meta>
+		
+		<title>Juego</title>
+		
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+		
+		<link 	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"
+				rel="stylesheet" id="bootstrap-css">
+		</link>
+
+		<script
+			src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js">
+		</script>
+		
+		<script type="text/javascript" th:src="@{/js/juegos.js}"></script>
+
+	</head>
+	
+	<body>
+	
+		<div th:replace="fragments/header :: header"></div>
+		
+		<div class="container">
+			<form th:action="@{/juegos/registrar}" method="post" th:object="${juegos}">
+				<div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="form-group">
+					
+					<label for="idjuegos">ID:</label> 
+					<input type="text" class="form-control" th:field="*{idJuegos}"></input>
+					
+					<div class="form-group">
+					
+						<label 	for="nombre">NOMBRE:</label> 
+						<input type="text" th:field="*{nombreJuegos}" class="form-control" id="nombre"></input>
+	
+						<div class="alert alert-danger" th:if="${#fields.hasErrors('nombreJuegos')}" 
+							th:errors="*{nombreJuegos}">
+						</div>
+						
+						<label for="categoria" class=" col-sm-2 col-form-label">CATEGORIA: </label>
+					<select
+						class="form-control" th:field="*{categoria.idCategoria}">
+						<option th:each="ca: ${listaCategorias}" th:value="${ca.idCategoria}"
+							th:text="${ca.nombreCategoria}"
+							th:selected="(${ca.idCategoria} == *{categoria.idCategoria})"></option>
+					</select>
+					
+					<label 	for="nombre">PRECIO:</label> 
+						<input type="text" th:field="*{Precio}" class="form-control" id="nombre"></input>
+	
+						<div class="alert alert-danger" th:if="${#fields.hasErrors('Precio')}" 
+							th:errors="*{Precio}">
+						</div>
+						
+					<label 	for="nombre">STOCK:</label> 
+						<input type="text" th:field="*{Stock}" class="form-control" id="nombre"></input>
+	
+						<div class="alert alert-danger" th:if="${#fields.hasErrors('Stock')}" 
+							th:errors="*{Stock}">
+						</div>
+					
+					</div>
+					
+				</div>
+				
+				<button th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" type="submit" class="btn btn-primary">Aceptar</button>
+				<a href="/juegos/listar" class="btn btn-danger">Cancelar</a>
+			</form>
+		</div>
+	
+		<div th:replace="fragments/footer :: footer"></div>
+
+	</body>
+	
+</html>

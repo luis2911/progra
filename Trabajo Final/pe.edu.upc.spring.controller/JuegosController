@@ -1,0 +1,162 @@
+package pe.edu.upc.spring.controller;
+
+import java.text.ParseException;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import pe.edu.upc.spring.model.Categoria;
+import pe.edu.upc.spring.model.Juegos;
+import pe.edu.upc.spring.service.ICategoriaService;
+import pe.edu.upc.spring.service.IJuegosService;
+
+@Controller
+@RequestMapping("/juegos")
+public class JuegosController {
+
+	
+	@Autowired
+	private IJuegosService mService;
+	@Autowired
+	private ICategoriaService cService;
+
+	@RequestMapping("/bienvenido")
+	public String irJuegosBienvenido() {
+		return "bienvenido";
+	}
+	
+	@RequestMapping("/")
+	public String irJuegos(Map<String, Object> model) {
+		model.put("listaJuegos", mService.listar());
+		return "listJuego";
+	}
+	
+	@RequestMapping("/irRegistrar")
+	public String irRegistrar(Model model) {
+		model.addAttribute("listaCategorias",cService.listar());
+		model.addAttribute("categoria", new Categoria());
+		model.addAttribute("juegos", new Juegos());
+		return "juegos";
+	}
+		
+	@RequestMapping("/registrar")
+	public String registrar(@ModelAttribute @Valid Juegos objJue, BindingResult binRes, Model model) 
+	throws ParseException
+	{
+		if (binRes.hasErrors()) {
+			return "juegos";
+		}
+		else {
+			boolean flag = mService.insertar(objJue);
+			if (flag) {
+				return "redirect:/juegos/listar";
+			}
+			else {
+				model.addAttribute("mensaje", "Ocurrio un error");
+				return "redirect:/juegos/irRegistrar";
+			}
+		}
+	}
+	
+	@RequestMapping("/modificar/{id}")
+	public String modificar(@PathVariable int id, Model model, RedirectAttributes objRedir) 
+	throws ParseException
+	{
+		Optional<Juegos> objJue = mService.listarId(id);
+		
+		if (objJue == null) {
+			objRedir.addFlashAttribute("mensaje", "Ocurrio un error");
+			return "redirect:/juegos/listar";
+		}
+		else {
+			model.addAttribute("listaCategorias",cService.listar());
+			if(objJue.isPresent())
+				objJue.ifPresent( o-> model.addAttribute("juegos", o));
+			
+			return "juegos";
+		}
+	}
+	
+	@RequestMapping("/eliminar")
+	public String eliminar(Map<String, Object> model, @RequestParam(value="id") Integer id) 
+	{
+		try {
+			if (id!=null && id > 0) {
+				mService.eliminar(id);
+				model.put("listaJuegos", mService.listar());
+			}
+		}
+		catch(Exception ex) {
+			System.out.println(ex.getMessage());
+			model.put("mensaje", "sucedio un error");
+			model.put("listaJuegos", mService.listar());
+		}
+		return "listJuego";
+	}
+	
+	@RequestMapping("/listar")
+	public String listar(Map<String, Object> model) {
+		model.put("listaJuegos", mService.listar());
+		return "listJuego";
+	}
+	
+	@RequestMapping("/listarId")
+	public String listar(Map<String, Object> model, @ModelAttribute Juegos juegos) 
+	throws ParseException
+	{
+		mService.listarId(juegos.getIdJuegos());
+		return "listJuego";
+	}	
+	
+	@RequestMapping("/buscar")
+	public String buscar(Map<String, Object> model, @ModelAttribute Juegos juegos ) throws ParseException {
+		List<Juegos> listaJuegos;
+		juegos.setNombreJuegos(juegos.getNombreJuegos());
+		listaJuegos = mService.buscarNombreJuegos(juegos.getNombreJuegos());
+		
+		if (listaJuegos.isEmpty()) {
+			model.put("mensaje", "No se encontro");
+		}
+		model.put("listaJuegos", listaJuegos);				
+		return "buscar";
+	}
+	
+	@PostMapping("/buscar")
+	public String buscar2(
+			@RequestParam(value = "txtnamesearch") String txtnamesearch,
+			Model model) {
+		List<Juegos> listaJuegos;
+		if (StringUtils.isEmpty(txtnamesearch)) {
+			listaJuegos = mService.listar();
+		} else {
+			listaJuegos = mService.buscarNombreJuegos(txtnamesearch);
+		}
+		
+		if (listaJuegos.isEmpty()) {
+			model.addAttribute("mensaje", "No se encontraron resultados");
+		}
+		model.addAttribute("listaJuegos", listaJuegos);				
+		return "listjuego";
+	}
+	
+	@RequestMapping("/irBuscar")
+	public String irBuscar(Model model) {
+		model.addAttribute("juegos", new Juegos());
+		return "buscar";
+	}
+	
+
+}

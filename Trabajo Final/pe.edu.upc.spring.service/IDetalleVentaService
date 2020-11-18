@@ -1,0 +1,17 @@
+package pe.edu.upc.spring.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import pe.edu.upc.spring.model.DetalleVenta;
+
+public interface IDetalleVentaService {
+	public boolean insertar(DetalleVenta detalleventa);
+	public List<DetalleVenta> listar();
+	public void eliminar(int idDetalleVenta);
+	public boolean update (DetalleVenta detalleventa);
+	public Optional<DetalleVenta> listarId(int idDetalleVenta);
+	List<DetalleVenta> buscarIdDetalle(int idDetalleVenta);
+	List<DetalleVenta> buscarporIdVenta(int idVenta);
+	
+}
